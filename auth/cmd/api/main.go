@@ -49,8 +49,9 @@ func main() {
 	}
 }
 
-func openDB(dns string) (*sql.DB, error) {
-	db, err := sql.Open("pgx", dns)
+func openDB(dsn string) (*sql.DB, error) {
+	db, err := sql.Open("pgx", dsn)
+
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +64,7 @@ func openDB(dns string) (*sql.DB, error) {
 }
 
 func connectToDB() *sql.DB {
-	dsn := os.Getenv("DNS")
+	dsn := os.Getenv("DSN")
 
 	for {
 		connection, err := openDB(dsn)
@@ -72,6 +73,7 @@ func connectToDB() *sql.DB {
 			log.Println("Connnecting to db...")
 			connectTries++
 		} else {
+			log.Println("Connected to DB successfully!")
 			return connection
 		}
 
