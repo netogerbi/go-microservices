@@ -15,4 +15,4 @@ WORKDIR /app
 
 COPY --from=builder /app/brokerApp .
 
-CMD ["./brokerApp"]
+ENTRYPOINT [ "./brokerApp" ]
