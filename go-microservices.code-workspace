@@ -1,11 +1,23 @@
 {
   "folders": [
     {
+      "name": ".root",
+      "path": "."
+    },
+    {
       "path": "client"
     },
     {
       "path": "broker"
+    },
+    {
+      "path": "project"
+    },
+    {
+      "path": "auth"
     }
   ],
-  "settings": {}
+  "settings": {
+    "makefile.extensionOutputFolder": "./.vscode"
+  }
 }
