@@ -8,12 +8,13 @@ import (
 
 func (app *Config) Authenticate(w http.ResponseWriter, r *http.Request) {
 	var requestPayload struct {
-		Email    string
-		Password string
+		Email    string `json:"email"`
+		Password string `json:"password"`
 	}
 
 	err := app.readJSON(w, r, &requestPayload)
 	if err != nil {
+		log.Printf("[ERROR]: %v", err)
 		app.errorJSON(w, err, http.StatusBadRequest)
 		return
 	}
@@ -25,8 +26,9 @@ func (app *Config) Authenticate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	valid, err := app.Models.User.PasswordMatches(user.Password)
+	valid, err := user.PasswordMatches(requestPayload.Password)
 	if err != nil || !valid {
+		log.Printf("[ERROR]: %v\n\tVALID: %v", err, valid)
 		app.writeJSON(w, http.StatusUnauthorized, errors.New("invalid credentials"))
 		return
 	}
