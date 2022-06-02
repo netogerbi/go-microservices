@@ -28,6 +28,19 @@ services:
     depends_on:
       - postgres
 
+  logger:
+    build:
+      context: ./../logger
+      dockerfile: Dockerfile.dev
+    restart: always
+    ports:
+      - "8082:80"
+    deploy:
+      mode: replicated
+      replicas: 1
+    depends_on:
+      - mongo
+
   postgres:
     image: 'postgres:14.2'
     ports:
@@ -41,3 +54,17 @@ services:
       POSTGRES_DB: users
     volumes:
       - ./db-data/postgres/:/var/lib/postgresql/data/
+
+  mongo:
+    image: 'mongo:4.2.16-bionic'
+    ports:
+      - "27017:27017"
+    deploy:
+      mode: replicated
+      replicas: 1
+    environment:
+      MONGO_INITDB_DATABASE: logger
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - ./db-data/mongo/:/data/db
