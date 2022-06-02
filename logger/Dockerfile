@@ -4,15 +4,15 @@ WORKDIR /app
 
 COPY . .
 
-RUN CGO_ENABLED=0 go build -o brokerApp ./cmd/api
+RUN CGO_ENABLED=0 go build -o loggerApp ./cmd/api
 
-RUN chmod +x brokerApp
+RUN chmod +x loggerApp
 
 # build a tiny linux image to run the app
 FROM alpine:latest
 
 WORKDIR /app
 
-COPY --from=builder /app/brokerApp .
+COPY --from=builder /app/loggerApp .
 
-ENTRYPOINT [ "./brokerApp" ]
+ENTRYPOINT [ "./loggerApp" ]
