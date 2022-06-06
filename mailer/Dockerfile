@@ -14,5 +14,6 @@ FROM alpine:latest
 WORKDIR /app
 
 COPY --from=builder /app/mailerApp .
+COPY --from=builder /app/templates ./templates
 
 ENTRYPOINT [ "./mailerApp" ]
