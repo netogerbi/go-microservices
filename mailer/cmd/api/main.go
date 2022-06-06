@@ -6,14 +6,18 @@ import (
 	"net/http"
 )
 
-type Config struct{}
+type Config struct {
+	Mailer Mail
+}
 
 const (
 	webPort = "80"
 )
 
 func main() {
-	app := Config{}
+	app := Config{
+		Mailer: NewMailer(),
+	}
 
 	if err := app.serve(); err != nil {
 		log.Panic(err)
