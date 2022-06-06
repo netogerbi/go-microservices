@@ -2,6 +2,7 @@ FRONT_END_BINARY=frontApp
 BROKER_BINARY=brokerApp
 AUTH_BINARY=authApp
 AUTH_BINARY=loggerApp
+MAILER_BINARY=mailerApp
 
 ## up: starts all containers in the background without forcing build
 up:
@@ -39,6 +40,12 @@ build_auth:
 build_logger:
 	@echo "Building logger binary..."
 	cd ../logger && env GOOS=linux CGO_ENABLED=0 go build -o ${LOGGER_BINARY} ./cmd/api
+	@echo "Done!"
+
+## build_broker: builds the broker binary as a linux executable
+build_mailer:
+	@echo "Building mailer binary..."
+	cd ../mailer && env GOOS=linux CGO_ENABLED=0 go build -o ${MAILER_BINARY} ./cmd/api
 	@echo "Done!"
 
 ## build_front: builds the frone end binary
