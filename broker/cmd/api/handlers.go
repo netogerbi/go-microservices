@@ -12,6 +12,14 @@ type RequestPayload struct {
 	Action string      `json:"action"`
 	Auth   AuthPayload `json:"auth,omitempty"`
 	Log    LogPayload  `json:"log,omitempty"`
+	Mail   MailPayload `json:"mail,omitempty"`
+}
+
+type MailPayload struct {
+	From    string `json:"from"`
+	To      string `json:"to"`
+	Subject string `json:"subject"`
+	Message string `json:"message"`
 }
 
 type AuthPayload struct {
@@ -44,13 +52,53 @@ func (app *Config) HandleSubmission(w http.ResponseWriter, r *http.Request) {
 	switch requestPayload.Action {
 	case "auth":
 		app.authenticate(w, requestPayload.Auth)
-		return
 	case "log":
 		app.logItem(w, requestPayload.Log)
-		return
+	case "mail":
+		app.sendEmail(w, requestPayload.Mail)
 	default:
 		app.errorJSON(w, errors.New("unknown action"))
 	}
+}
+
+func (app *Config) sendEmail(w http.ResponseWriter, mailData MailPayload) {
+	jsonData, err := json.MarshalIndent(mailData, "", "\t")
+	if err != nil {
+		log.Println("Error trying to marshal mail data: ", err)
+		app.errorJSON(w, err)
+		return
+	}
+
+	req, err := http.NewRequest(http.MethodPost, "http://mailer/send", bytes.NewBuffer(jsonData))
+	if err != nil {
+		log.Println("Error trying create request to mailer: ", err)
+		app.errorJSON(w, err)
+		return
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	client := &http.Client{}
+
+	res, err := client.Do(req)
+	if err != nil {
+		log.Println("Error on request to mailer: ", err)
+		app.errorJSON(w, err)
+		return
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+		log.Println("Logger error response: ", err)
+		app.errorJSON(w, err)
+		return
+	}
+
+	responseJson := jsonResponse{
+		Error:   false,
+		Message: "Email sent successfully",
+	}
+
+	app.writeJSON(w, http.StatusOK, responseJson)
 }
 
 func (app *Config) logItem(w http.ResponseWriter, entry LogPayload) {
