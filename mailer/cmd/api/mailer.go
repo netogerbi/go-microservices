@@ -111,7 +111,7 @@ func (m *Mail) buildHTML(msg Message) (string, error) {
 }
 
 func (m *Mail) buildPlainText(msg Message) (string, error) {
-	templateFilePath := "./templates/mail.html.gohtml"
+	templateFilePath := "./templates/mail.plain.gohtml"
 
 	t, err := template.New("email-plain").ParseFiles(templateFilePath)
 	if err != nil {
