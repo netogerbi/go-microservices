@@ -98,9 +98,10 @@ services:
       - '8025:8025'
 
   rabbitmq:
-    image: 'rabbitmq:3.10.5-alpine'
+    image: 'rabbitmq:3.10.5-management-alpine'
     ports:
       - "5672:5672"
+      - "15672:15672" #admin interface
     deploy:
       mode: replicated
       replicas: 1
