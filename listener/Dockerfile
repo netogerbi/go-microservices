@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN CGO_ENABLED=0 go build -o listenerApp ./cmd/api
+RUN CGO_ENABLED=0 go build -o listenerApp ./
 
 RUN chmod +x listenerApp
 

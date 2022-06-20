@@ -4,4 +4,4 @@ WORKDIR /app
 
 COPY . .
 
-CMD [ "go", "run", "./cmd/api" ]
+CMD [ "go", "run", "." ]
