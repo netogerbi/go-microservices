@@ -1,6 +1,7 @@
 package main
 
 import (
+	"listener/events"
 	"log"
 	"math"
 	"time"
@@ -15,13 +16,20 @@ func main() {
 		log.Panic(err)
 	}
 	defer mqconn.Close()
-	log.Println("Successfully connected to RabbitMQ")
 
 	// listen for msgs
+	log.Println("Start listening and consumming messages from RqbbitMQ...")
 
 	// create consumer
+	c, err := events.NewConsumer(mqconn)
+	if err != nil {
+		panic(err)
+	}
 
 	// watch the queue and consume msfs
+	if err = c.Listen([]string{"log.INFO", "log.ERROR", "log.WARN"}); err != nil {
+		log.Panicln(err)
+	}
 }
 
 func connect() (*amqp.Connection, error) {
@@ -30,11 +38,12 @@ func connect() (*amqp.Connection, error) {
 	var conn *amqp.Connection
 
 	for {
-		c, err := amqp.Dial("amqp://guest:guest@localhost")
+		c, err := amqp.Dial("amqp://guest:guest@rabbitmq")
 		if err != nil {
 			log.Println("Trying to connect to rabbitmq...")
 			counts++
 		} else {
+			log.Println("Successfully connected to RabbitMQ")
 			conn = c
 			break
 		}
