@@ -53,8 +53,8 @@ func connect() (*amqp.Connection, error) {
 			return nil, err
 		}
 
-		backOff = time.Duration(math.Pow(float64(counts), 2))
-		log.Printf("Backing off %d seconds until try again...", backOff)
+		backOff = time.Duration(math.Pow(float64(counts), 2)) * time.Second
+		log.Printf("Backing off %d nano seconds until try again...", backOff)
 		time.Sleep(backOff)
 		continue
 	}
