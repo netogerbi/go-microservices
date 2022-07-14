@@ -4,6 +4,12 @@ WORKDIR /app
 
 COPY . .
 
+RUN apt update
+RUN apt install -y protobuf-compiler
+RUN GO111MODULE=on
+RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.27
+RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
+
 RUN CGO_ENABLED=0 go build -o loggerApp ./cmd/api
 
 RUN chmod +x loggerApp
