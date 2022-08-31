@@ -4,6 +4,20 @@ This is a case study about basic implementation microservices using Golang langu
 
 As far as I could see, it's needed to open the project using the workspace file so vscode will be able to recognize imports and packages correctly. To do it open the vscode, click on "File" menu and click on "Open workspace from file..." and select the "go-microservices.code-workspace" file.
 
+## Starting the project
+
+Insinde project folder:
+
+```sh
+make dev
+```
+
+To stop everything:
+
+```sh
+make dev-stop
+```
+
 ### Tech Stack
 
 - gohtml renderer (FE)

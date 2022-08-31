@@ -4,6 +4,8 @@ WORKDIR /app
 
 COPY . .
 
+# once this is production container we can compile protobuf on build
+# and then comile golang code
 RUN apt update
 RUN apt install -y protobuf-compiler
 RUN GO111MODULE=on

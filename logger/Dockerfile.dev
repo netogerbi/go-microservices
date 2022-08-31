@@ -4,18 +4,21 @@ WORKDIR /app
 
 COPY . .
 
-# Install protobuf for go inside docker
-RUN apt update
-# maybe should be used v
-RUN apt install -y protobuf-compiler
-RUN GO111MODULE=on
-RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
-RUN protoc --go_out=paths=source_relative:. ./logs/logs.proto --go-grpc_out=. ./logs/logs.proto
+# # Install protobuf for go inside docker
+# # This type of run does output files to host
+# # this is why it has been used the entrypoint that just runs after container initialization
 
-# # Install protobuf for go inside docker using script
-# RUN chmod +x ./entrypoint.sh
-# ENTRYPOINT [ "./entrypoint.sh" ]
+
+# RUN apt update
+# # maybe should be used v
+# RUN apt install -y protobuf-compiler
+# RUN GO111MODULE=on
+# RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+# RUN go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+# RUN protoc --go_out=paths=source_relative:. ./logs/logs.proto --go-grpc_out=. ./logs/logs.proto
+
+# Install protobuf for go inside docker using script
+RUN chmod +x ./entrypoint.sh
+ENTRYPOINT [ "sh", "./entrypoint.sh" ]
 
 CMD [ "go", "run", "./cmd/api" ]
-
